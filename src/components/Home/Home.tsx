@@ -1,9 +1,12 @@
 import React from 'react';
 // TODO: ADD Bootstrap here
 
+interface Props{
+    title: string;
+    age: number;
+}
 
-
-export const Home = (props:any) => {
+export const Home = (props:Props) => {
     return (
         <div>
             <h1>Hello World From React!</h1>
