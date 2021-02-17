@@ -1,13 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useGetData } from '../../custom-hooks';
 import { Jumbotron, Button, Container, Card, Col, Row} from 'react-bootstrap';
-import drone from '../../assets/img/drone.svg'
+import drone from '../../assets/img/drone.svg';
+import { server_calls } from '../../api'
+
+import { useHistory } from 'react-router-dom';
 
 export const Drones = () => {
+
+    const history:any = useHistory();
+
+    {/* Creating history route function -- routeChange */}
+    const routeChange = (id?:string, path?:string) => {
+        history.push({
+            pathname: path,
+            state: { drone_id: id}
+        })
+    }
 
     let { droneData, getData} = useGetData();
     console.log(droneData)
 
+    const handleDeleteDrone = (id:any) => {
+        server_calls.delete(id);
+        getData()
+    }
 
     return (
         <Container>
@@ -16,7 +33,7 @@ export const Drones = () => {
                     <Jumbotron>
                     <h1> Hello Drones </h1>
                     <p>Here are your current collection of drones!</p>
-                    <Button>Create New Drone</Button>
+                    <Button onClick = { () => routeChange('','create')}>Create New Drone</Button>
                     </Jumbotron>
                 </Col>
             </Row>
@@ -40,8 +57,8 @@ export const Drones = () => {
                                             { item.price }
                                         </Card.Text>
 
-                                        <Button variant="danger">Delete</Button>
-                                        <Button variant="primary">Update</Button>
+                                        <Button variant="danger" onClick = { () => handleDeleteDrone(item.id)}>Delete</Button>
+                                        <Button variant="primary" onClick= { () => routeChange(item.id, 'update')}>Update</Button>
                                     </Card.Body>
                                 </Card>    
                             </div>
