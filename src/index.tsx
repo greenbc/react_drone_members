@@ -1,11 +1,14 @@
 import React from 'react';
 import { render } from 'react-dom';
 import reportWebVitals from './reportWebVitals';
-import { Home, CreateDrone, Drones, UpdateDrone } from './components';
+import { Home, CreateDrone, Drones, UpdateDrone, Login } from './components';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Navbar, Nav } from 'react-bootstrap';
 import logo from './assets/img/Coding-Drones-Logo.png';
 import './styles.css';
+import { FirebaseAppProvider, AuthCheck } from 'reactfire';
+import 'firebase/auth';
+import { firebaseConfig } from './firebaseConfig';
 
 // Imports From React-Router-Dom
 import {
@@ -18,6 +21,7 @@ from 'react-router-dom';
 
 render(
   <React.StrictMode>
+    <FirebaseAppProvider firebaseConfig={firebaseConfig}>
     <Router>
       <Navbar bg='dark' variant='dark'>
         <Navbar.Brand>
@@ -39,12 +43,30 @@ render(
           </Nav.Link>
         </Nav.Item>
 
+        {/* Auth Check for Authed User */}
+        <AuthCheck fallback={
+          <Nav.Item>
+            <Nav.Link>
+              <Link to="/login">Login Here</Link>
+            </Nav.Link>
+          </Nav.Item>
+        }>
+
         <Nav.Item>
           <Nav.Link>
             <Link to='/drones'> Display Your Drones </Link>
           </Nav.Link>
         </Nav.Item>
 
+        <Nav.Item>
+          <Nav.Link>
+            <Link to="/login">Logout</Link>
+          </Nav.Link>
+        </Nav.Item>
+
+        </AuthCheck>
+        {/* End of Auth Check */}
+        
       </Nav>
 
       </Navbar>
@@ -63,9 +85,13 @@ render(
         <Route path="/update">
           <UpdateDrone />
         </Route>
+        <Route path="/login">
+          <Login />
+        </Route>
       </Switch>
 
     </Router>
+    </FirebaseAppProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
